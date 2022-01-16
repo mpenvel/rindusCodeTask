@@ -22,6 +22,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.rindus.codingtask.dto.AlbumDTO;
 import com.rindus.codingtask.dto.UserDTO;
 import com.rindus.codingtask.dto.UsersXML;
 import com.rindus.codingtask.exceptions.UserException;
@@ -67,7 +68,8 @@ public class UserService {
 	public void updateUser(String userId, UserDTO user) throws UserException {
 		try {
 			HttpEntity<UserDTO> requestUpdate = new HttpEntity<>(user, null);
-			restTemplate.exchange(Constants.FAKE_API_URL + Constants.USERS_RESOURCE + "/" + userId, HttpMethod.PUT, requestUpdate, UserDTO.class);
+			restTemplate.exchange(Constants.FAKE_API_URL + Constants.USERS_RESOURCE + "/" + userId, HttpMethod.PUT,
+					requestUpdate, UserDTO.class);
 		} catch (HttpClientErrorException e) {
 			LOGGER.error(e.getMessage());
 			throw new UserException(e.getStatusCode(), e.getMessage());
@@ -77,13 +79,14 @@ public class UserService {
 	public void patchUser(String userId, UserDTO user) throws UserException {
 		try {
 			HttpEntity<UserDTO> requestUpdate = new HttpEntity<>(user, null);
-			restTemplate.exchange(Constants.FAKE_API_URL + Constants.USERS_RESOURCE + "/" + userId, HttpMethod.PATCH, requestUpdate, UserDTO.class);
+			restTemplate.exchange(Constants.FAKE_API_URL + Constants.USERS_RESOURCE + "/" + userId, HttpMethod.PATCH,
+					requestUpdate, UserDTO.class);
 		} catch (HttpClientErrorException e) {
 			LOGGER.error(e.getMessage());
 			throw new UserException(e.getStatusCode(), e.getMessage());
 		}
 	}
-	
+
 	public void deleteUser(String userId) throws UserException {
 		try {
 			restTemplate.delete(Constants.FAKE_API_URL + Constants.USERS_RESOURCE + "/" + userId);
@@ -92,7 +95,20 @@ public class UserService {
 			throw new UserException(e.getStatusCode(), e.getMessage());
 		}
 	}
-	
+
+	public List<AlbumDTO> getUserAlbums(String userId) throws UserException {
+		try {
+			ResponseEntity<List<AlbumDTO>> response = restTemplate.exchange(
+					Constants.FAKE_API_URL + Constants.USERS_RESOURCE + "/" + userId + "/" + Constants.ALBUMS_RESOURCE,
+					HttpMethod.GET, null, new ParameterizedTypeReference<List<AlbumDTO>>() {
+					});
+			return response.getBody();
+		} catch (HttpClientErrorException e) {
+			LOGGER.error(e.getMessage());
+			throw new UserException(e.getStatusCode(), e.getMessage());
+		}
+	}
+
 	public byte[] getUsersJSONFormat() throws UserException {
 		ObjectMapper mapper = new ObjectMapper();
 		try {

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.rindus.codingtask.dto.AlbumDTO;
 import com.rindus.codingtask.dto.UserDTO;
 import com.rindus.codingtask.exceptions.UserException;
 import com.rindus.codingtask.services.UserService;
@@ -61,6 +62,11 @@ public class UserController {
 	public ResponseEntity<Void> patchUser(@PathVariable("userId") String userId) throws UserException {
 		userService.deleteUser(userId);
 		return new ResponseEntity<>(HttpStatus.OK);
+	}
+	
+	@GetMapping("/{userId}/albums")
+	public ResponseEntity<List<AlbumDTO>> getUserAlbums(@PathVariable("userId") String userId) throws UserException {
+		return new ResponseEntity<>(userService.getUserAlbums(userId), HttpStatus.OK);
 	}
 
 	@GetMapping("json")

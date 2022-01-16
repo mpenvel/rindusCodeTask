@@ -1,10 +1,10 @@
-package com.rindus.codingtask;
+package com.rindus.codingtask.unitTests;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class CodingTaskApplicationTests {
+class UserServiceTests {
 
 	@Test
 	void contextLoads() {
